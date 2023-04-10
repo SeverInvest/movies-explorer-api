@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SeverInvest/express-mesto-gha"
+    "url": "https://github.com/SeverInvest/movies-explorer-api"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
