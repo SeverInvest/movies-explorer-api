@@ -20,7 +20,7 @@ module.exports.createMovie = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.deleteCard = (req, res, next) => {
+module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .orFail(() => {
       throw new NotFoundError('Resource not found');
