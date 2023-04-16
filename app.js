@@ -2,7 +2,6 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
-// const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { port, addressCors, addressDB } = require('./config');
@@ -19,7 +18,6 @@ mongoose.connect(addressDB);
 app.use(cors({
   origin: addressCors,
 }));
-// app.use(cookieParser());
 app.use(requestLogger);
 app.use(router);
 app.use(errorLogger);

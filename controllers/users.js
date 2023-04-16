@@ -29,23 +29,9 @@ function updateUser(userId, values, res, next) {
     .catch(next);
 }
 
-// module.exports.getUsers = (_, res, next) => {
-//   User.find()
-//     .then((users) => {
-//       res
-//         .status(STATUS_OK)
-//         .send({ users });
-//     })
-//     .catch(next);
-// };
-
 module.exports.getCurrentUser = (req, res, next) => {
   searchUserById(req.user._id, res, next);
 };
-
-// module.exports.getUserById = (req, res, next) => {
-//   searchUserById(req.params.userId, res, next);
-// };
 
 module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
@@ -68,11 +54,6 @@ module.exports.updateUserInfo = (req, res, next) => {
   const { name, email } = req.body;
   updateUser(req.user._id, { name, email }, res, next);
 };
-
-// module.exports.updateAvatar = (req, res, next) => {
-//   const { avatar } = req.body;
-//   updateUser(req.user._id, { avatar }, res, next);
-// };
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;

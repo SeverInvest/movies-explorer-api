@@ -3,25 +3,9 @@ const { STATUS_OK, STATUS_CREATED } = require('../utils/statuses');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
-// function searchCardAndUpdate(cardId, method, res, next) {
-//   Cards.findByIdAndUpdate(
-//     cardId,
-//     method,
-//     { new: true },
-//   )
-//     .orFail(() => {
-//       throw new NotFoundError('Resource not found');
-//     })
-//     .populate(['owner', 'likes'])
-//     .then((card) => {
-//       res.status(STATUS_OK).send(card);
-//     })
-//     .catch(next);
-// }
-
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})
-    // .populate(['owner', 'likes'])
+    .populate('owner')
     .then((movies) => res.status(STATUS_OK).send(movies.reverse()))
     .catch(next);
 };
@@ -35,14 +19,6 @@ module.exports.createMovie = (req, res, next) => {
     })
     .catch(next);
 };
-
-// module.exports.likeCard = (req, res, next) => {
-//   searchCardAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, res, next);
-// };
-
-// module.exports.dislikeCard = (req, res, next) => {
-//   searchCardAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, res, next);
-// };
 
 module.exports.deleteCard = (req, res, next) => {
   Movie.findById(req.params.movieId)
