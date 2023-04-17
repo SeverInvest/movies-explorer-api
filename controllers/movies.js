@@ -11,7 +11,7 @@ module.exports.getMovies = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
-  const { data } = req.body;
+  const data = req.body;
   const ownerId = req.user._id;
   Movie.create({ ...data, owner: ownerId })
     .then((movie) => {
