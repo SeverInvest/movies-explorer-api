@@ -25,5 +25,5 @@ app.use(errors());
 app.use(handleError);
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`); // eslint-disable-line no-console
+  console.log(`App listening on port ${port}`);
 });

@@ -1,4 +1,4 @@
-const dotenv = require('dotenv'); // eslint-disable-line
+const dotenv = require('dotenv');
 
 dotenv.config();
 module.exports = {
