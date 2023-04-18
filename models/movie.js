@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const isURL = require('validator/lib/isURL');
+const { MSG_400_LINK } = require('../utils/constants');
 
 mongoose.set('strictQuery', false);
 
@@ -30,7 +31,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (url) => isURL(url),
-      message: 'incorrect link format',
+      message: MSG_400_LINK,
     },
   },
   trailerLink: {
@@ -38,7 +39,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (url) => isURL(url),
-      message: 'incorrect link format',
+      message: MSG_400_LINK,
     },
   },
   thumbnail: {
@@ -46,7 +47,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (url) => isURL(url),
-      message: 'incorrect link format',
+      message: MSG_400_LINK,
     },
   },
   owner: {

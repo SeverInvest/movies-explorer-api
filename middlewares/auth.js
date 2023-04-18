@@ -2,11 +2,12 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const { nodeEnv, jwtSecret } = require('../config');
+const { MSG_401_NEEDED_AUTH } = require('../utils/constants');
 
 module.exports = async (req, _, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer')) {
-    throw new UnauthorizedError('Needed authorization');
+    throw new UnauthorizedError(MSG_401_NEEDED_AUTH);
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -15,13 +16,13 @@ module.exports = async (req, _, next) => {
   try {
     payload = jwt.verify(token, nodeEnv === 'production' && jwtSecret);
   } catch (err) {
-    next(new UnauthorizedError('Needed authorization'));
+    next(new UnauthorizedError(MSG_401_NEEDED_AUTH));
     return;
   }
   try {
     const user = await User.findById(payload._id);
     if (!user) {
-      throw new UnauthorizedError('Needed authorization');
+      throw new UnauthorizedError(MSG_401_NEEDED_AUTH);
     }
     req.user = user;
     next();

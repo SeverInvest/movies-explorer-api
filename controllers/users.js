@@ -3,13 +3,14 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { STATUS_OK, STATUS_CREATED } = require('../utils/statuses');
 const NotFoundError = require('../errors/NotFoundError');
+const { MSG_404 } = require('../utils/constants');
 const { nodeEnv, jwtSecret } = require('../config');
 
 async function searchUserById(userId, res, next) {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      throw new NotFoundError('Resource not found');
+      throw new NotFoundError(MSG_404);
     }
     res.status(STATUS_OK).send(user);
   } catch (err) {
@@ -21,7 +22,7 @@ async function updateUser(userId, values, res, next) {
   try {
     const user = await User.findByIdAndUpdate(userId, values, { new: true, runValidators: true });
     if (!user) {
-      throw new NotFoundError('Resource not found');
+      throw new NotFoundError(MSG_404);
     }
     res.status(STATUS_OK).send(user);
   } catch (err) {
