@@ -4,7 +4,7 @@ const User = require('../models/user');
 const { STATUS_OK, STATUS_CREATED } = require('../utils/statuses');
 const NotFoundError = require('../errors/NotFoundError');
 const { MSG_404 } = require('../utils/constants');
-const { nodeEnv, jwtSecret } = require('../config');
+const { jwtSecret } = require('../config');
 
 async function searchUserById(userId, res, next) {
   try {
@@ -65,7 +65,8 @@ module.exports.login = async (req, res, next) => {
     const user = await User.findUserByCredentials(email, password);
     const token = await jwt.sign(
       { _id: user._id },
-      nodeEnv === 'production' && jwtSecret,
+      // nodeEnv === 'production' &&
+      jwtSecret,
       { expiresIn: '7d' },
     );
     res.status(STATUS_OK).send({ token });
