@@ -22,7 +22,7 @@ jobs:
     - name: Installing Dependencies
       run: yarn
     - name: Installing wait-port
-      run: yarn add wait-port
+      run: yarn global add wait-port
     - name: Wait MongoDB
       run: wait-port -t 30000 localhost:27017
     - name: Run test endpoints
