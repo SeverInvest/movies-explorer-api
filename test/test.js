@@ -22,7 +22,11 @@ const testLogin = {
 
 // let testToken;
 describe('проверка ендпоинтов', () => {
-  before(async () => { // чистим базу
+  before(async () => { // чистим базу до тестов
+    await User.deleteMany();
+  });
+
+  after(async () => { // чистим базу после тестов
     await User.deleteMany();
   });
 

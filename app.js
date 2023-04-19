@@ -14,6 +14,7 @@ const handleError = require('./middlewares/handleError');
 mongoose.set('strictQuery', false);
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(helmet());
 app.use(express.json());
 mongoose.connect(addressDB);
