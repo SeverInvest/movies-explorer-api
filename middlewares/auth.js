@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-const { nodeEnv, jwtSecret } = require('../config');
+const { jwtSecret } = require('../config');
 const { MSG_401_NEEDED_AUTH } = require('../utils/constants');
 
 module.exports = async (req, _, next) => {
@@ -14,7 +14,7 @@ module.exports = async (req, _, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, nodeEnv === 'production' && jwtSecret);
+    payload = jwt.verify(token, jwtSecret);
   } catch (err) {
     next(new UnauthorizedError(MSG_401_NEEDED_AUTH));
     return;
