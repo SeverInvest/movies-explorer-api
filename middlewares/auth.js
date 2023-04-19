@@ -6,8 +6,12 @@ const { MSG_401_NEEDED_AUTH } = require('../utils/constants');
 
 module.exports = async (req, _, next) => {
   const { authorization } = req.headers;
-  if (!authorization || !authorization.startsWith('Bearer')) {
-    throw new UnauthorizedError(MSG_401_NEEDED_AUTH);
+  try {
+    if (!authorization || !authorization.startsWith('Bearer')) {
+      throw new UnauthorizedError(MSG_401_NEEDED_AUTH);
+    }
+  } catch (err) {
+    next(err);
   }
 
   const token = authorization.replace('Bearer ', '');
