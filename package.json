@@ -1,12 +1,12 @@
 {
-  "name": "express-mesto-gha",
+  "name": "diploma_practicum",
   "version": "1.0.0",
   "author": "Nikolay Vasilyev",
   "main": "app.js",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SeverInvest/express-mesto-gha"
+    "url": "https://github.com/SeverInvest/movies-explorer-api"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
     "express-winston": "^4.2.0",
     "helmet": "^6.0.1",
     "jsonwebtoken": "^9.0.0",
@@ -26,11 +27,14 @@
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "nodemon": "^2.0.20"
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3"
   },
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "lint": "npx eslint ."
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "lint": "npx eslint .",
+    "test": "NODE_ENV=testing DB_ADDRESS=mongodb://127.0.0.1/test CORS_ADDRESS=http://localhost:3000 mocha --recursive --exit --timeout 10000"
   }
 }
