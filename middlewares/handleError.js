@@ -20,7 +20,7 @@ function handleError(error, _, res, next) {
     httpError = new ValidationError(error.message);
   }
 
-  res.status(httpError.status).send(httpError.message);
+  res.status(httpError.status).send({ message: httpError.message });
 
   next();
 }
