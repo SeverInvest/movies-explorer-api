@@ -1,6 +1,7 @@
 const { celebrate, Joi } = require('celebrate');
 
 const urlCheckPattern = /https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?/;
+const nameCheckPattern = /^[a-zA-Zа-яА-ЯЁё][- a-zA-Zа-яА-ЯЁё]{2,30}/;
 
 const authValidate = celebrate({
   body: Joi.object().keys({
@@ -11,7 +12,11 @@ const authValidate = celebrate({
 
 const registerValidate = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
+    name: Joi.string()
+      .required()
+      .pattern(nameCheckPattern)
+      .min(2)
+      .max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -19,7 +24,11 @@ const registerValidate = celebrate({
 
 const userValidate = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
+    name: Joi.string()
+      .required()
+      .pattern(nameCheckPattern)
+      .min(2)
+      .max(30),
     email: Joi.string().required().email(),
   }),
 });
