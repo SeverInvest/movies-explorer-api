@@ -1,7 +1,7 @@
 const { celebrate, Joi } = require('celebrate');
 
 const urlCheckPattern = /https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?/;
-const nameCheckPattern = /^[a-zA-Zа-яА-ЯЁё][- a-zA-Zа-яА-ЯЁё]{2,30}/;
+const nameCheckPattern = /^(?!\s)[-A-Za-zА-Яа-яЁё\s]+$/;
 
 const authValidate = celebrate({
   body: Joi.object().keys({
