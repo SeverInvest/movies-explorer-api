@@ -3,7 +3,7 @@ name: Tests diploma
 on:
   push:
     branches:
-      - 'level-1'
+      - 'main'
 
 jobs:
   test_endpoints:

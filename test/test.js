@@ -10,6 +10,13 @@ describe('Пробуем, что тесты работают', () => {
   });
 });
 
+describe('Проверка отработки запроса на несуществующий роут', () => {
+  it('должен выдать 404', async () => {
+    const res = await request(app).get('/abrakadabra');
+    assert.equal(res.status, 404);
+  });
+});
+
 const testUser = {
   name: 'test_user',
   password: 'test_password',
