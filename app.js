@@ -17,7 +17,7 @@ app.use(helmet());
 app.use(express.json());
 mongoose.connect(addressDB);
 app.use(cors({
-  origin: [addressCors, 'http://localhost:3000'],
+  origin: [addressCors],
 }));
 app.use(requestLogger);
 app.use(limiter);

@@ -10,15 +10,8 @@ describe('Пробуем, что тесты работают', () => {
   });
 });
 
-describe('Проверка отработки запроса на несуществующий роут', () => {
-  it('должен выдать 404', async () => {
-    const res = await request(app).get('/abrakadabra');
-    assert.equal(res.status, 404);
-  });
-});
-
 const testUser = {
-  name: 'test_user',
+  name: 'test-user',
   password: 'test_password',
   email: 'email@test.net',
 };
@@ -29,7 +22,7 @@ const testLogin = {
 };
 
 const testUser2 = {
-  name: 'test_user2',
+  name: 'test-user-dva',
   password: 'test_password2',
   email: 'email2@test.net',
 };
@@ -40,7 +33,7 @@ const testLogin2 = {
 };
 
 const testChangeUser = {
-  name: 'test_1_user',
+  name: 'test- -user',
   email: 'email_1@test.net',
 };
 
@@ -91,7 +84,7 @@ describe('проверка ендпоинтов', () => {
     it('зарегистрировать пользователя с валидными почтой и паролем', async () => {
       const res = await request(app).post('/signup').send(testUser);
       assert.equal(res.status, 201);
-      assert.equal(res.body.name, 'test_user');
+      assert.equal(res.body.name, 'test-user');
     });
 
     it('отказать пользователю в повторной регистрации', async () => {
@@ -114,7 +107,7 @@ describe('проверка ендпоинтов', () => {
         authorization: testToken,
       });
       assert.equal(res.status, 200);
-      assert.equal(res.body.name, 'test_user');
+      assert.equal(res.body.name, 'test-user');
       assert.equal(res.body.email, 'email@test.net');
     });
 
@@ -132,7 +125,7 @@ describe('проверка ендпоинтов', () => {
         authorization: testToken,
       });
       assert.equal(res.status, 200);
-      assert.equal(res.body.name, 'test_1_user');
+      assert.equal(res.body.name, 'test- -user');
       assert.equal(res.body.email, 'email_1@test.net');
     });
   });
@@ -192,6 +185,19 @@ describe('проверка ендпоинтов', () => {
         authorization: testToken2,
       });
       assert.equal(res1.status, 403);
+    });
+  });
+
+  describe('Проверка отработки запроса на несуществующий роут', () => {
+    it('переход на /abrakadabra для незарегистрированного пользователя - 401', async () => {
+      const res = await request(app).get('/abrakadabra');
+      assert.equal(res.status, 401);
+    });
+    it('переход на /abrakadabra для зарегистрированного пользователя - 404', async () => {
+      const res = await request(app).get('/abrakadabra').set({
+        authorization: testToken,
+      });
+      assert.equal(res.status, 404);
     });
   });
 });
