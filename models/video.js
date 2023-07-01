@@ -4,7 +4,7 @@ const { MSG_400_LINK } = require('../utils/constants');
 
 mongoose.set('strictQuery', false);
 
-const movieSchema = new mongoose.Schema({
+const videoSchema = new mongoose.Schema({
 
   language: {
     type: String,
@@ -42,19 +42,10 @@ const movieSchema = new mongoose.Schema({
       message: MSG_400_LINK,
     },
   },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'user',
-  },
-  movieId: {
-    type: String,
-    required: true,
-  },
   name: {
     type: String,
     required: true,
   },
 });
 
-module.exports = mongoose.model('movie', movieSchema);
+module.exports = mongoose.model('video', videoSchema);

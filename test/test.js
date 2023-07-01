@@ -38,31 +38,27 @@ const testChangeUser = {
 };
 
 const testMovie = {
-  country: 'Russia',
+  language: 'ru',
   director: 'Harry Potter',
   duration: '123',
   year: '1990',
   description: 'Самый лучший фильм-2',
   image: 'https://mobimg.b-cdn.net/v3/fetch/bc/bc45d1305c40e2ec7d72c71080b34751.jpeg',
   trailerLink: 'https://youtu.be/aNG-QfgwntU',
-  thumbnail: 'https://mobimg.b-cdn.net/v3/fetch/bc/bc45d1305c40e2ec7d72c71080b34751.jpeg',
-  movieId: '1234',
-  nameRU: 'МЫ',
-  nameEN: 'They',
+  movieId: '649ef72617006d37351dbc2b',
+  name: 'МЫ',
 };
 
 const testBrokenMovie = {
-  country: 'Russia',
+  language: 'Russia',
   director: 'Harry Potter',
   duration: '123',
   year: '1990',
   description: 'Самый лучший фильм-2',
   image: '',
   trailerLink: '',
-  thumbnail: 'https://',
   movieId: '1234',
-  nameRU: 'МЫ',
-  nameEN: 'They',
+  name: 'МЫ',
 };
 
 const testBrokenToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDNlZWViNjcwYTE3NWZkMDA4ODk1MzEiLCJpYXQiOjE2ODE5MDIwMTksImV4cCI6MTY4MjUwNjgxOX0.nCL-hMzDcBRFIzMEwxZVjMoSXVp3LBsghtb1i77GOBg';
@@ -136,8 +132,8 @@ describe('проверка ендпоинтов', () => {
         authorization: testToken,
       });
       assert.equal(res.status, 201);
-      assert.equal(res.body.country, 'Russia');
-      assert.equal(res.body.nameRU, 'МЫ');
+      assert.equal(res.body.language, 'ru');
+      assert.equal(res.body.name, 'МЫ');
       testIdMovie = res.body._id;
     });
     it('отказать в добавлении фильма с невалидной информацией, но правильным токеном', async () => {
