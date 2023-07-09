@@ -28,7 +28,12 @@ const userSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 30,
     },
-
+    videos: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Video',
+      },
+    ],
   },
 );
 
@@ -49,4 +54,12 @@ userSchema.statics.findUserByCredentials = function checkPair(email, password) {
     });
 };
 
-module.exports = mongoose.model('user', userSchema);
+userSchema.pre('deleteOne', { document: true, query: false }, async (next) => {
+  await this.model('Video').updateMany(
+    { users: this._id },
+    { $pull: { users: this._id } },
+  );
+  next();
+});
+
+module.exports = mongoose.model('User', userSchema);

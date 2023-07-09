@@ -10,7 +10,7 @@ const videoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  director: {
+  author: {
     type: String,
     required: true,
   },
@@ -26,7 +26,7 @@ const videoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
+  imageLink: {
     type: String,
     required: true,
     validate: {
@@ -34,7 +34,7 @@ const videoSchema = new mongoose.Schema({
       message: MSG_400_LINK,
     },
   },
-  trailerLink: {
+  videoLink: {
     type: String,
     required: true,
     validate: {
@@ -42,10 +42,29 @@ const videoSchema = new mongoose.Schema({
       message: MSG_400_LINK,
     },
   },
-  name: {
+  nameVideo: {
     type: String,
     required: true,
   },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+  },
+  users: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
-module.exports = mongoose.model('video', videoSchema);
+videoSchema.pre('deleteOne', { document: true, query: false }, async (next) => {
+  await this.model('User').updateMany(
+    { videos: this._id },
+    { $pull: { videos: this._id } },
+  );
+  next();
+});
+
+module.exports = mongoose.model('Video', videoSchema);
