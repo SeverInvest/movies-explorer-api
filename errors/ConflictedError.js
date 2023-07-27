@@ -7,6 +7,6 @@ class ConflictedError extends ApplicationError {
     this.status = STATUS_CONFLICTED;
   }
 }
-// 'Such a user already exists'
+// 'Such a user already exists', 'Such a video already exists'
 
 module.exports = ConflictedError;

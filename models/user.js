@@ -28,12 +28,21 @@ const userSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 30,
     },
+    roles: [{ type: String, ref: 'Role' }],
     videos: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Video',
       },
     ],
+    atRegistration: {
+      type: Date,
+      default: Date.now,
+    },
+    atLastEntry: {
+      type: Date,
+      default: Date.now,
+    },
   },
 );
 
@@ -53,13 +62,5 @@ userSchema.statics.findUserByCredentials = function checkPair(email, password) {
         });
     });
 };
-
-userSchema.pre('deleteOne', { document: true, query: false }, async (next) => {
-  await this.model('Video').updateMany(
-    { users: this._id },
-    { $pull: { users: this._id } },
-  );
-  next();
-});
 
 module.exports = mongoose.model('User', userSchema);

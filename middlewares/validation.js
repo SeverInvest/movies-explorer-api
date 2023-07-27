@@ -1,7 +1,8 @@
 const { celebrate, Joi } = require('celebrate');
 
-const urlCheckPattern = /https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?/;
+// const urlCheckPattern = /https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?/;
 const nameCheckPattern = /^(?!\s)[-A-Za-zА-Яа-яЁё\s]+$/;
+const urlLinkYoutube = /^https:\/\/youtu.be\/[\w-]{11}$/;
 
 const authValidate = celebrate({
   body: Joi.object().keys({
@@ -33,23 +34,10 @@ const userValidate = celebrate({
   }),
 });
 
-const movieValidate = celebrate({
+const videoLinkValidate = celebrate({
   body: Joi.object().keys({
-    language: Joi.string().required(),
-    director: Joi.string().required(),
-    duration: Joi.number().required(),
-    year: Joi.string().required(),
-    description: Joi.string().required(),
-    image: Joi.string().required().pattern(urlCheckPattern),
-    trailerLink: Joi.string().required().pattern(urlCheckPattern),
-    movieId: Joi.string().required(),
-    name: Joi.string().required(),
-  }),
-});
-
-const movieIdValidate = celebrate({
-  params: Joi.object().keys({
-    movieId: Joi.string().required().length(24).hex(),
+    videoLink: Joi.string()
+      .pattern(urlLinkYoutube),
   }),
 });
 
@@ -57,6 +45,5 @@ module.exports = {
   authValidate,
   registerValidate,
   userValidate,
-  movieValidate,
-  movieIdValidate,
+  videoLinkValidate,
 };

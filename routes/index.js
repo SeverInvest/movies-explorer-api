@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const NotFoundError = require('../errors/NotFoundError');
 const routerUsers = require('./users');
-// const routerMovies = require('./movies');
 const routerVideos = require('./videos');
 const { createUser, login } = require('../controllers/users');
 const { authValidate, registerValidate } = require('../middlewares/validation');
@@ -12,7 +11,6 @@ router.post('/signup', registerValidate, createUser);
 router.post('/signin', authValidate, login);
 router.use(auth);
 router.use('/users', routerUsers);
-// router.use('/movies', routerMovies);
 router.use('/videos', routerVideos);
 router.use((_, res, next) => {
   next(new NotFoundError(MSG_404));

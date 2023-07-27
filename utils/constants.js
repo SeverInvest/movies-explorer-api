@@ -5,8 +5,9 @@ const MSG_401_PASS_AND_EMAIL = 'Incorrect password or email';
 const MSG_401_NEEDED_AUTH = 'Needed authorization';
 const MSG_403 = 'Access to execution is forbidden';
 const MSG_404 = 'Resource not found';
-const MSG_409 = 'Such a user already exists';
-const MSG_DELETE_MOVIE = 'Фильм удалён';
+const MSG_409_USER = 'Such a user already exists';
+const MSG_409_VIDEO = 'Such a video already exists';
+const MSG_DELETE_MOVIE = 'Видео удалено';
 const MSG_500 = 'Internal server error';
 
 module.exports = {
@@ -17,7 +18,8 @@ module.exports = {
   MSG_401_NEEDED_AUTH,
   MSG_403,
   MSG_404,
-  MSG_409,
+  MSG_409_USER,
+  MSG_409_VIDEO,
   MSG_DELETE_MOVIE,
   MSG_500,
 };

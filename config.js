@@ -12,4 +12,5 @@ module.exports = {
   dbPass: process.env.DB_PASS || 'password',
   dbName: process.env.DB_NAME || 'database',
   dbHosts: process.env.DB_HOSTS || 'host',
+  keyApiYoutube: process.env.KEY_API_YOUTUBE || 'keyApi',
 };

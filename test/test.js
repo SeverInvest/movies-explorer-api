@@ -2,7 +2,7 @@ const assert = require('assert');
 const request = require('supertest');
 const app = require('../app');
 const User = require('../models/user');
-const Movie = require('../models/movie');
+const Video = require('../models/video');
 
 describe('Пробуем, что тесты работают', () => {
   it('проверка работоспособности фреймворка', () => {
@@ -21,59 +21,25 @@ const testLogin = {
   email: 'email@test.net',
 };
 
-const testUser2 = {
-  name: 'test-user-dva',
-  password: 'test_password2',
-  email: 'email2@test.net',
-};
-
-const testLogin2 = {
-  password: 'test_password2',
-  email: 'email2@test.net',
-};
+let testToken;
+let userId;
+let testVideoId;
 
 const testChangeUser = {
   name: 'test- -user',
   email: 'email_1@test.net',
 };
 
-const testMovie = {
-  language: 'ru',
-  director: 'Harry Potter',
-  duration: '123',
-  year: '1990',
-  description: 'Самый лучший фильм-2',
-  image: 'https://mobimg.b-cdn.net/v3/fetch/bc/bc45d1305c40e2ec7d72c71080b34751.jpeg',
-  trailerLink: 'https://youtu.be/aNG-QfgwntU',
-  movieId: '649ef72617006d37351dbc2b',
-  name: 'МЫ',
-};
-
-const testBrokenMovie = {
-  language: 'Russia',
-  director: 'Harry Potter',
-  duration: '123',
-  year: '1990',
-  description: 'Самый лучший фильм-2',
-  image: '',
-  trailerLink: '',
-  movieId: '1234',
-  name: 'МЫ',
-};
+const linkYoutube = { videoLink: 'https://youtu.be/7YMp_W9H7hI' };
+const linkBrokenYoutube = { videoLink: 'https://youtu.be/7YMp' };
 
 const testBrokenToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDNlZWViNjcwYTE3NWZkMDA4ODk1MzEiLCJpYXQiOjE2ODE5MDIwMTksImV4cCI6MTY4MjUwNjgxOX0.nCL-hMzDcBRFIzMEwxZVjMoSXVp3LBsghtb1i77GOBg';
-let testToken;
-let testIdMovie;
 
 describe('проверка ендпоинтов', () => {
-  before(async () => { // чистим базу до тестов
-    await User.deleteMany();
-    await Movie.deleteMany();
-  });
-
   after(async () => { // чистим базу после тестов
-    await User.deleteMany();
-    await Movie.deleteMany();
+    await User.deleteOne({ name: 'test-user' });
+    await User.deleteOne({ name: 'test- -user' });
+    await Video.deleteMany({ videoLink: 'https://youtu.be/7YMp_W9H7hI' });
   });
 
   describe('Регистрация пользователя', () => {
@@ -105,6 +71,7 @@ describe('проверка ендпоинтов', () => {
       assert.equal(res.status, 200);
       assert.equal(res.body.name, 'test-user');
       assert.equal(res.body.email, 'email@test.net');
+      userId = res.body._id;
     });
 
     it('отказать в получении информации пользователю с недействующим токеном', async () => {
@@ -126,61 +93,77 @@ describe('проверка ендпоинтов', () => {
     });
   });
 
-  describe('Добавление фильма', () => {
-    it('добавить фильм с валидной информацией и правильным токеном', async () => {
-      const res = await request(app).post('/movies').send(testMovie).set({
+  describe('Добавление видео', () => {
+    it('добавить видео с валидной ссылкой и правильным токеном', async () => {
+      const res = await request(app).post('/videos').send(linkYoutube).set({
         authorization: testToken,
       });
       assert.equal(res.status, 201);
-      assert.equal(res.body.language, 'ru');
-      assert.equal(res.body.name, 'МЫ');
-      testIdMovie = res.body._id;
+      assert.equal(res.body.videoLink, 'https://youtu.be/7YMp_W9H7hI');
+      testVideoId = res.body._id;
     });
-    it('отказать в добавлении фильма с невалидной информацией, но правильным токеном', async () => {
-      const res = await request(app).post('/movies').send(testBrokenMovie).set({
-        authorization: testToken,
-      });
-      assert.equal(res.status, 400);
-    });
-    it('отказать в добавлении фильма с валидной информацией, но неправильным токеном', async () => {
-      const res = await request(app).post('/movies').send(testMovie).set({
+
+    it(
+      'отказать в добавлении видео с невалидной ссылкой, но правильным токеном',
+      async () => {
+        const res = await request(app).post('/videos').send(linkBrokenYoutube).set({
+          authorization: testToken,
+        });
+        assert.equal(res.status, 400);
+      },
+    );
+
+    it('отказать в добавлении видео с валидной ссылкой, но неправильным токеном', async () => {
+      const res = await request(app).post('/videos').send(linkYoutube).set({
         authorization: testBrokenToken,
       });
       assert.equal(res.status, 401);
     });
   });
 
-  describe('Получить фильмы', () => {
-    it('получить список фильмов (правильный токен)', async () => {
-      const res = await request(app).get('/movies').set({
+  describe('Получить видео', () => {
+    it('получить список видео (правильный токен)', async () => {
+      const res = await request(app).get('/videos').set({
         authorization: testToken,
       });
       assert.equal(res.status, 200);
     });
   });
 
-  describe('Удаление фильма', () => {
-    it('удалить фильм с правильным id_movie и правильным токеном', async () => {
-      const res = await request(app).delete(`/movies/${testIdMovie}`).set({
+  describe('Поставить лайк', () => {
+    it('добавить видео в избранное)', async () => {
+      const res = await request(app).patch(`/videos/like/${testVideoId}`).set({
+        authorization: testToken,
+      });
+      assert.equal(res.status, 200);
+      assert.equal(res.body.video.users[0], userId);
+    });
+  });
+
+  describe('Поставить лайк', () => {
+    it('добавить видео в избранное)', async () => {
+      const res = await request(app).patch(`/videos/like/${testVideoId}`).set({
+        authorization: testToken,
+      });
+      assert.equal(res.status, 200);
+      assert.equal(res.body.video.users[0], userId);
+    });
+  });
+
+  describe('Удалить видео', () => {
+    it('удалить видео', async () => {
+      const res = await request(app).delete(`/videos/${testVideoId}`).set({
         authorization: testToken,
       });
       assert.equal(res.status, 200);
     });
-    it('отказать в удалении фильма с правильным id_movie, но чужим токеном', async () => {
-      // добавляем фильм под пользователем 1
-      const res2 = await request(app).post('/movies').send(testMovie).set({
+
+    it('у пользователя удалено видео из списка избранного)', async () => {
+      const res = await request(app).get('/users/me').set({
         authorization: testToken,
       });
-      testIdMovie = res2.body._id;
-      // регистрируем пользователя 2 и получаем токен
-      await request(app).post('/signup').send(testUser2);
-      const res = await request(app).post('/signin').send(testLogin2);
-      const testToken2 = `Bearer ${res.body.token}`;
-      // удаляем фильм 1-го пользователя, используя токен 2-го пользователя
-      const res1 = await request(app).delete(`/movies/${testIdMovie}`).set({
-        authorization: testToken2,
-      });
-      assert.equal(res1.status, 403);
+      assert.equal(res.status, 200);
+      assert.equal(res.body.videos[0] === testVideoId, false);
     });
   });
 

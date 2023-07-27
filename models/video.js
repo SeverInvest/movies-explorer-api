@@ -9,17 +9,18 @@ const videoSchema = new mongoose.Schema({
   language: {
     type: String,
     required: true,
+    default: 'ru',
   },
   author: {
     type: String,
     required: true,
   },
   duration: {
-    type: Number,
+    type: String,
     required: true,
   },
-  year: {
-    type: String,
+  publishedAtYoutube: {
+    type: Date,
     required: true,
   },
   description: {
@@ -37,6 +38,7 @@ const videoSchema = new mongoose.Schema({
   videoLink: {
     type: String,
     required: true,
+    unique: true,
     validate: {
       validator: (url) => isURL(url),
       message: MSG_400_LINK,
@@ -46,10 +48,20 @@ const videoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  viewCountYoutube: {
+    type: String,
+  },
+  likeCountYoutube: {
+    type: String,
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User',
+  },
+  publishedAtThis: {
+    type: Date,
+    required: true,
   },
   users: [
     {
@@ -57,14 +69,6 @@ const videoSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
-});
-
-videoSchema.pre('deleteOne', { document: true, query: false }, async (next) => {
-  await this.model('User').updateMany(
-    { videos: this._id },
-    { $pull: { videos: this._id } },
-  );
-  next();
 });
 
 module.exports = mongoose.model('Video', videoSchema);
