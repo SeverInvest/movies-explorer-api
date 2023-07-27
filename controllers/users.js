@@ -91,10 +91,10 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.getUsers = async (_, res, next) => {
   try {
-    const users = await User.find();
-    if (!users) {
-      throw new NotFoundError(MSG_404);
-    }
+    const users = await User.find({});
+    // if (!users) {
+    //   throw new NotFoundError(MSG_404);
+    // }
     res.status(STATUS_OK).send(users);
   } catch (err) {
     next(err);

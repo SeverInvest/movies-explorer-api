@@ -25,7 +25,7 @@ async function getVideo(idVideo) {
 
 module.exports.getVideos = async (_, res, next) => {
   try {
-    const videos = await Video.find();
+    const videos = await Video.find({});
     res.status(STATUS_OK).send(videos);
   } catch (err) {
     next(err);
