@@ -20,6 +20,7 @@ mongoose.set('strictQuery', false);
 const app = express();
 app.use(helmet());
 app.use(express.json());
+console.log(url, useSsl);
 mongoose.connect(url, {
   ssl: useSsl,
   sslValidate: useSslValidate,
