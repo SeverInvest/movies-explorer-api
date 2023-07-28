@@ -62,6 +62,7 @@ module.exports.createUser = async (req, res, next) => {
       },
     );
   } catch (err) {
+    console.log('onerror', err);
     next(err);
   }
 };

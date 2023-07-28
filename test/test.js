@@ -3,6 +3,7 @@ const request = require('supertest');
 const app = require('../app');
 const User = require('../models/user');
 const Video = require('../models/video');
+const Role = require('../models/role');
 
 describe('Пробуем, что тесты работают', () => {
   it('проверка работоспособности фреймворка', () => {
@@ -36,6 +37,13 @@ const linkBrokenYoutube = { videoLink: 'https://youtu.be/7YMp' };
 const testBrokenToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDNlZWViNjcwYTE3NWZkMDA4ODk1MzEiLCJpYXQiOjE2ODE5MDIwMTksImV4cCI6MTY4MjUwNjgxOX0.nCL-hMzDcBRFIzMEwxZVjMoSXVp3LBsghtb1i77GOBg';
 
 describe('проверка ендпоинтов', () => {
+  before(async () => { // чистим базу до тестов
+    await User.deleteOne({ name: 'test-user' });
+    await User.deleteOne({ name: 'test- -user' });
+    await Video.deleteMany({ videoLink: 'https://youtu.be/7YMp_W9H7hI' });
+    await Role.insertMany([{ value: 'USER' }, { value: 'ADMIN' }, { value: 'SUPERUSER' }, { value: 'BLOCKED' }]);
+  });
+
   after(async () => { // чистим базу после тестов
     await User.deleteOne({ name: 'test-user' });
     await User.deleteOne({ name: 'test- -user' });
