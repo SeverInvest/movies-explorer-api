@@ -4,9 +4,9 @@ const cors = require('cors');
 
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const { url } = require('./connect');
+// const { url } = require('./connect');
 const {
-  cacert, addressCors, useSsl, useSslValidate,
+  cacert, addressCors, useSsl, useSslValidate, dbURL,
 } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 // const { addressCors,  } = require('./config');
@@ -20,8 +20,8 @@ mongoose.set('strictQuery', false);
 const app = express();
 app.use(helmet());
 app.use(express.json());
-console.log(url, useSsl);
-mongoose.connect(url, {
+console.log(dbURL, useSsl);
+mongoose.connect(dbURL, {
   useNewUrlParser: true,
   ssl: useSsl,
   sslValidate: useSslValidate,
