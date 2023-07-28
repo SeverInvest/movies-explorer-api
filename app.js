@@ -5,9 +5,11 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const { url } = require('./connect');
-const { cacert } = require('./config');
+const {
+  cacert, addressCors, useSsl, useSslValidate,
+} = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { addressCors } = require('./config');
+// const { addressCors,  } = require('./config');
 const router = require('./routes/index');
 const limiter = require('./middlewares/rateLimit');
 
@@ -19,8 +21,8 @@ const app = express();
 app.use(helmet());
 app.use(express.json());
 mongoose.connect(url, {
-  ssl: true,
-  sslValidate: true,
+  ssl: useSsl,
+  sslValidate: useSslValidate,
   sslCA: cacert,
 });
 app.use(cors({

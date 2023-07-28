@@ -19,6 +19,9 @@ jobs:
       uses: supercharge/mongodb-github-action@1.6.0
       with:
         mongodb-version: '6.0.4'
+        mongodb-username: nik
+        mongodb-password: nik
+        mongodb-db: videos
     - name: Installing Dependencies
       run: yarn
     - name: Installing wait-port
@@ -26,4 +29,4 @@ jobs:
     - name: Wait MongoDB
       run: wait-port -t 30000 localhost:27017
     - name: Run test endpoints
-      run: yarn test
+      run: KEY_API_YOUTUBE=${{ secrets.KEY_API_YOUTUBE }} DB_USER=nik DB_PASS=nik DB_NAME=videos DB_HOSTS=127.0.0.1 USE_SSL=false USE_SSLVALIDATE=false yarn test

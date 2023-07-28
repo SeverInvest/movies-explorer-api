@@ -13,4 +13,6 @@ module.exports = {
   dbName: process.env.DB_NAME || 'database',
   dbHosts: process.env.DB_HOSTS || 'host',
   keyApiYoutube: process.env.KEY_API_YOUTUBE || 'keyApi',
+  useSsl: (process.env.USE_SSL || 'true') === 'true',
+  useSslValidate: (process.env.USE_SSLVALIDATE || 'true') === 'true',
 };
