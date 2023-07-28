@@ -25,7 +25,8 @@ mongoose.connect(url, {
   ssl: useSsl,
   sslValidate: useSslValidate,
   sslCA: cacert,
-});
+}).then(() => console.log('mongodb is connected'))
+  .catch((err) => console.log(err));
 app.use(cors({
   origin: [addressCors],
 }));
