@@ -37,6 +37,6 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "lint": "npx eslint .",
-    "test": "NODE_ENV=testing mocha --recursive --exit --timeout 100000"
+    "test": "NODE_ENV=testing mocha --full-trace --recursive --exit --timeout 10000"
   }
 }
