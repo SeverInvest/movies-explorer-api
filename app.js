@@ -22,9 +22,10 @@ app.use(helmet());
 app.use(express.json());
 console.log(url, useSsl);
 mongoose.connect(url, {
+  useNewUrlParser: true,
   ssl: useSsl,
   sslValidate: useSslValidate,
-  sslCA: cacert,
+  sslCA: useSsl ? cacert : undefined,
 }).then(() => console.log('mongodb is connected'))
   .catch((err) => console.log(err));
 app.use(cors({
