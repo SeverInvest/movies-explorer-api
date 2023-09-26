@@ -1,25 +1,21 @@
-const axios = require('axios');
-const Video = require('../models/video');
-const User = require('../models/user');
-const { STATUS_OK, STATUS_CREATED } = require('../utils/statuses');
-const NotFoundError = require('../errors/NotFoundError');
-const ForbiddenError = require('../errors/ForbiddenError');
-const ConflictedError = require('../errors/ConflictedError');
-const {
-  MSG_404, MSG_403, MSG_DELETE_MOVIE, MSG_409_VIDEO,
-} = require('../utils/constants');
-const { keyApiYoutube } = require('../config');
+const axios = require("axios");
+const Video = require("../models/video");
+const User = require("../models/user");
+const { STATUS_OK, STATUS_CREATED } = require("../utils/statuses");
+const NotFoundError = require("../errors/NotFoundError");
+const ForbiddenError = require("../errors/ForbiddenError");
+const ConflictedError = require("../errors/ConflictedError");
+const { MSG_404, MSG_403, MSG_DELETE_MOVIE, MSG_409_VIDEO } = require("../utils/constants");
+const { keyApiYoutube } = require("../config");
 
 async function getVideo(idVideo) {
   const api = axios.create({
-    baseURL: 'https://www.googleapis.com/youtube/v3/videos',
+    baseURL: "https://www.googleapis.com/youtube/v3/videos",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
-  const response = await api.get(
-    `/?key=${keyApiYoutube}&part=snippet,contentDetails,statistics&id=${idVideo}`,
-  );
+  const response = await api.get(`/?key=${keyApiYoutube}&part=snippet,contentDetails,statistics&id=${idVideo}`);
   return response;
 }
 
@@ -35,7 +31,7 @@ module.exports.getVideos = async (_, res, next) => {
 module.exports.createVideo = async (req, res, next) => {
   try {
     const vLink = req.body.videoLink;
-    const idVideo = vLink.replace('https://youtu.be/', '');
+    const idVideo = vLink.replace("https://youtu.be/", "");
     const responseYoutube = await getVideo(idVideo);
     if (!responseYoutube) {
       throw new NotFoundError(MSG_404);
@@ -73,7 +69,7 @@ module.exports.deleteVideo = async (req, res, next) => {
     if (!video) {
       throw new NotFoundError(MSG_404);
     }
-    if (video.owner.toString() === req.user._id.toString() || req.user.roles.includes('ADMIN')) {
+    if (video.owner.toString() === req.user._id.toString() || req.user.roles.includes("ADMIN")) {
       await User.updateMany({}, { $pull: { videos: req.params.videoId } });
       await Video.deleteOne(video);
       res.status(STATUS_OK).send({ data: video, message: MSG_DELETE_MOVIE });
@@ -108,10 +104,10 @@ module.exports.like = async (req, res, next) => {
 module.exports.dislike = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id.toString());
-    user.videos = user.videos.filter((x) => req.params.videoId !== x.toString());
+    user.videos = user.videos.filter(x => req.params.videoId !== x.toString());
     user.save();
     const video = await Video.findById(req.params.videoId);
-    video.users = video.users.filter((x) => req.user._id.toString() !== x.toString());
+    video.users = video.users.filter(x => req.user._id.toString() !== x.toString());
     video.save();
     res.status(STATUS_OK).send({ video, user });
   } catch (err) {
@@ -122,7 +118,7 @@ module.exports.dislike = async (req, res, next) => {
 module.exports.updateVideo = async (req, res, next) => {
   try {
     const video = await Video.findById(req.params.videoId);
-    const idVideo = video.videoLink.replace('https://youtu.be/', '');
+    const idVideo = video.videoLink.replace("https://youtu.be/", "");
     const responseYoutube = await getVideo(idVideo);
     const { snippet, contentDetails, statistics } = responseYoutube.data.items[0];
     video.language = snippet.defaultAudioLanguage;

@@ -1,21 +1,22 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const UnauthorizedError = require('../errors/UnauthorizedError');
-const { jwtSecret } = require('../config');
-const { MSG_401_NEEDED_AUTH } = require('../utils/constants');
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const UnauthorizedError = require("../errors/UnauthorizedError");
+const { jwtSecret } = require("../config");
+const { MSG_401_NEEDED_AUTH } = require("../utils/constants");
 
 module.exports = async (req, _, next) => {
   const { authorization } = req.headers;
+  let payload;
+  let token;
   try {
-    if (!authorization || !authorization.startsWith('Bearer') || authorization.replace('Bearer ', '') === '') {
+    if (!authorization || !authorization.startsWith("Bearer ")) {
       throw new UnauthorizedError(MSG_401_NEEDED_AUTH);
+    } else {
+      token = authorization.replace("Bearer ", "");
     }
   } catch (err) {
     next(err);
   }
-  const token = authorization.replace('Bearer ', '');
-  let payload;
-
   try {
     payload = jwt.verify(token, jwtSecret);
   } catch (err) {
